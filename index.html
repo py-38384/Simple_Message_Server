@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket</title>
+    <style>
+        .container{
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <label for="name">Enter Your Name</label> <br>
+    <input type="text" id="name" placeholder="Enter Name"> <br>
+    <label for="message">Enter Your Name</label> <br>
+    <textarea id="message" placeholder="Enter message"></textarea> <br>
+    <button onclick="sendMessage()">Send Message</button>
+    <div class="container">
+
+    </div>
+</body>
+<script>
+    // Create WebSocket connection.
+    const socket = new WebSocket("ws://localhost:8080");
+
+    // Connection opened
+    socket.addEventListener("open", (event) => {});
+
+    // Listen for messages
+    socket.addEventListener("message", (event) => {
+        const message = event.data;
+        const container = document.querySelector('.container')
+        container.innerHTML = `<div style="margin-bottom: 12px;">${message}</p><br>` + container.innerHTML
+    });
+
+    const sendMessage = () => {
+        const name_input = document.querySelector('#name')
+        const message_textarea = document.querySelector('#message')
+        const name = name_input.value
+        const message = message_textarea.value
+        message_textarea.value = ""
+        const payload = {
+            name: name,
+            message: message,
+        }
+        socket.send(JSON.stringify(payload));
+    }
+</script>
+</html>
